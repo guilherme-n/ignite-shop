@@ -7,7 +7,6 @@ export default function Home() {
 				<title>Ignite Shop</title>
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
 			</Head>
-			<main>Hello world</main>
 		</>
 	);
 }
