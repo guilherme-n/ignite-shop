@@ -4,9 +4,10 @@ import { HomeContainer, Product } from '../styles/pages/home';
 import { useKeenSlider } from 'keen-slider/react';
 
 import { stripe } from '../lib/stripe';
+import { moneyFormatter } from '../utils/formatter';
 
 import 'keen-slider/keen-slider.min.css';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import Stripe from 'stripe';
 
 interface HomeProps {
@@ -39,7 +40,7 @@ export default function Home({ products }: HomeProps) {
 						/>
 						<footer>
 							<strong>{product.name}</strong>
-							<span>${product.price}</span>
+							<span>{product.price}</span>
 						</footer>
 					</Product>
 				);
@@ -48,7 +49,7 @@ export default function Home({ products }: HomeProps) {
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 	const response = await stripe.products.list({
 		expand: ['data.default_price'],
 	});
@@ -59,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 			id: p.id,
 			name: p.name,
 			imageUrl: p.images[0],
-			price: price.unit_amount! / 100,
+			price: moneyFormatter.format(price.unit_amount! / 100),
 		};
 	});
 
