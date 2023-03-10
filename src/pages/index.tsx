@@ -1,27 +1,70 @@
 import Image from 'next/image';
 import { HomeContainer, Product } from '../styles/pages/home';
 
-import tShirt1 from '../assets/t-shirts/1.png';
-import tShirt2 from '../assets/t-shirts/2.png';
-import tShirt3 from '../assets/t-shirts/3.png';
+import { useKeenSlider } from 'keen-slider/react';
 
-export default function Home() {
+import { stripe } from '../lib/stripe';
+
+import 'keen-slider/keen-slider.min.css';
+import { useEffect } from 'react';
+import { GetServerSideProps } from 'next';
+import Stripe from 'stripe';
+
+interface HomeProps {
+	products: {
+		id: string;
+		name: string;
+		imageUrl: string;
+		price: number;
+	}[];
+}
+
+export default function Home({ products }: HomeProps) {
+	const [sliderRef] = useKeenSlider({
+		slides: {
+			perView: 3,
+			spacing: 48,
+		},
+	});
+
 	return (
-		<HomeContainer>
-			<Product>
-				<Image src={tShirt1} width={520} height={480} alt='T Shirt' />
-				<footer>
-					<strong>T Shirt 1</strong>
-					<span>$19.90</span>
-				</footer>
-			</Product>
-			<Product>
-				<Image src={tShirt2} width={520} height={480} alt='T Shirt' />
-				<footer>
-					<strong>T Shirt 2</strong>
-					<span>$19.90</span>
-				</footer>
-			</Product>
+		<HomeContainer ref={sliderRef} className='kee`n-slider'>
+			{products.map((product) => {
+				return (
+					<Product key={product.id} className='keen-slider__slide'>
+						<Image
+							src={product.imageUrl}
+							width={520}
+							height={480}
+							alt='T Shirt'
+						/>
+						<footer>
+							<strong>{product.name}</strong>
+							<span>${product.price}</span>
+						</footer>
+					</Product>
+				);
+			})}
 		</HomeContainer>
 	);
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+	const response = await stripe.products.list({
+		expand: ['data.default_price'],
+	});
+
+	const products = response.data.map((p) => {
+		const price = p.default_price as Stripe.Price;
+		return {
+			id: p.id,
+			name: p.name,
+			imageUrl: p.images[0],
+			price: price.unit_amount! / 100,
+		};
+	});
+
+	return {
+		props: { products },
+	};
+};
