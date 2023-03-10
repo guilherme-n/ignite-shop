@@ -6,7 +6,6 @@ import { useKeenSlider } from 'keen-slider/react';
 import { stripe } from '../lib/stripe';
 
 import 'keen-slider/keen-slider.min.css';
-import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import Stripe from 'stripe';
 
