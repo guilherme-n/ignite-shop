@@ -29,7 +29,7 @@ export default function Home({ products }: HomeProps) {
 	});
 
 	return (
-		<HomeContainer ref={sliderRef} className='kee`n-slider'>
+		<HomeContainer ref={sliderRef} className='keen-slider'>
 			{products.map((product) => {
 				return (
 					<Link
