@@ -8,28 +8,31 @@ import {
 	ProductContainer,
 	ProductDetails,
 } from '../../styles/pages/product';
-import { useRouter } from 'next/router';
+import { Product as ProductType } from '../../types/product';
+import axios from 'axios';
+import { useState } from 'react';
 
 interface ProductProps {
-	product: {
-		id: string;
-		name: string;
-		imageUrl: string;
-		price: string;
-		description: string;
-		defaultPriceId: string;
-	};
+	product: ProductType;
 }
 
 export default function Product({ product }: ProductProps) {
-	// const { isFallback } = useRouter();
+	const [isSendingCheckout, setIsSendingCheckout] = useState(false);
 
-	// if(isFallback) {
-	// 	<SkeletonPage />
-	// }
+	async function handleBuyProduct() {
+		try {
+			setIsSendingCheckout(true);
 
-	function handleBuyProduct() {
-		console.log({ product });
+			const response = await axios.post('/api/checkout', {
+				id: product.id,
+				priceId: product.defaultPriceId,
+			});
+
+			window.location.href = response.data.checkoutUrl;
+		} catch (err) {
+			setIsSendingCheckout(false);
+			console.log(err);
+		}
 	}
 
 	return (
@@ -44,7 +47,9 @@ export default function Product({ product }: ProductProps) {
 
 				<p>{product.description}</p>
 
-				<button onClick={handleBuyProduct}>Buy now</button>
+				<button onClick={handleBuyProduct} disabled={isSendingCheckout}>
+					Buy now
+				</button>
 			</ProductDetails>
 		</ProductContainer>
 	);
@@ -52,11 +57,7 @@ export default function Product({ product }: ProductProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
 	return {
-		paths: [
-			{
-				params: { id: 'prod_NUu3flT2sqFNSE' },
-			},
-		],
+		paths: [],
 		fallback: 'blocking',
 	};
 };

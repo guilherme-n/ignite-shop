@@ -5,9 +5,18 @@ export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
-	const priceId = 'price_1MjuFgBI22dftSnjAiVDFbPw';
+	const { id, priceId } = req.body;
+
+	if (req.method !== 'POST') {
+		return res.status(405);
+	}
+
+	if (!priceId) {
+		return res.status(400).json({ error: 'Invalid price id' });
+	}
+
 	const successUrl = `${process.env.NEXT_URL}/success`;
-	const cancelUrl = `${process.env.NEXT_URL}/`;
+	const cancelUrl = `${process.env.NEXT_URL}/product/${id}`;
 
 	const checkoutSession = await stripe.checkout.sessions.create({
 		success_url: successUrl,
