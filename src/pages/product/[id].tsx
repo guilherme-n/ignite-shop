@@ -11,6 +11,7 @@ import {
 import { Product as ProductType } from '../../types/product';
 import axios from 'axios';
 import { useState } from 'react';
+import Head from 'next/head';
 
 interface ProductProps {
 	product: ProductType;
@@ -36,22 +37,32 @@ export default function Product({ product }: ProductProps) {
 	}
 
 	return (
-		<ProductContainer>
-			<ImageContainer>
-				<Image src={product.imageUrl} width={520} height={480} alt='t-shirt' />
-			</ImageContainer>
+		<>
+			<Head>
+				<title>{product.name} | Ignite Shop</title>
+			</Head>
+			<ProductContainer>
+				<ImageContainer>
+					<Image
+						src={product.imageUrl}
+						width={520}
+						height={480}
+						alt='t-shirt'
+					/>
+				</ImageContainer>
 
-			<ProductDetails>
-				<h1>{product.name}</h1>
-				<span>{product.price}</span>
+				<ProductDetails>
+					<h1>{product.name}</h1>
+					<span>{product.price}</span>
 
-				<p>{product.description}</p>
+					<p>{product.description}</p>
 
-				<button onClick={handleBuyProduct} disabled={isSendingCheckout}>
-					Buy now
-				</button>
-			</ProductDetails>
-		</ProductContainer>
+					<button onClick={handleBuyProduct} disabled={isSendingCheckout}>
+						Buy now
+					</button>
+				</ProductDetails>
+			</ProductContainer>
+		</>
 	);
 }
 
