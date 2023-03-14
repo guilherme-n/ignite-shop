@@ -10,6 +10,7 @@ import 'keen-slider/keen-slider.min.css';
 
 import { moneyFormatter } from '../utils/formatter';
 import { HomeContainer, Product } from '../styles/pages/home';
+import Head from 'next/head';
 
 interface HomeProps {
 	products: {
@@ -30,9 +31,8 @@ export default function Home({ products }: HomeProps) {
 
 	return (
 		<>
-			{' '}
 			<Head>
-				<title>{product.name} | Ignite Shop</title>
+				<title>Ignite Shop</title>
 			</Head>
 			<HomeContainer ref={sliderRef} className='keen-slider'>
 				{products.map((product) => {
