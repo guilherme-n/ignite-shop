@@ -11,6 +11,8 @@ import 'keen-slider/keen-slider.min.css';
 import { moneyFormatter } from '../utils/formatter';
 import { HomeContainer, Product } from '../styles/pages/home';
 import Head from 'next/head';
+import { ProductSkeleton } from '../components/ProductSkeleton';
+import { useRouter } from 'next/router';
 
 interface HomeProps {
 	products: {
@@ -29,34 +31,45 @@ export default function Home({ products }: HomeProps) {
 		},
 	});
 
+	const { isFallback } = useRouter();
+
 	return (
 		<>
 			<Head>
 				<title>Ignite Shop</title>
 			</Head>
 			<HomeContainer ref={sliderRef} className='keen-slider'>
-				{products.map((product) => {
-					return (
-						<Link
-							href={`/product/${product.id}`}
-							key={product.id}
-							prefetch={false}
-						>
-							<Product className='keen-slider__slide'>
-								<Image
-									src={product.imageUrl}
-									width={520}
-									height={480}
-									alt='T Shirt'
-								/>
-								<footer>
-									<strong>{product.name}</strong>
-									<span>{product.price}</span>
-								</footer>
-							</Product>
-						</Link>
-					);
-				})}
+				{isFallback ? (
+					<>
+						<ProductSkeleton />
+						<ProductSkeleton />
+						<ProductSkeleton />
+						<ProductSkeleton />
+					</>
+				) : (
+					products.map((product) => {
+						return (
+							<Link
+								href={`/product/${product.id}`}
+								key={product.id}
+								prefetch={false}
+							>
+								<Product className='keen-slider__slide'>
+									<Image
+										src={product.imageUrl}
+										width={520}
+										height={480}
+										alt='T Shirt'
+									/>
+									<footer>
+										<strong>{product.name}</strong>
+										<span>{product.price}</span>
+									</footer>
+								</Product>
+							</Link>
+						);
+					})
+				)}
 			</HomeContainer>
 		</>
 	);
@@ -79,5 +92,6 @@ export const getStaticProps: GetStaticProps = async () => {
 
 	return {
 		props: { products },
+		revalidate: 1 * 60 * 60,
 	};
 };
