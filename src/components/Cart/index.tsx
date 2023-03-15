@@ -25,6 +25,7 @@ interface CartProps {
 export function Cart({ isOpen, onClose }: CartProps) {
 	const [transformSize, setTransformSize] = useState(0);
 	const { cart, removeFromCart } = useCart();
+	const [isSendingCheckout, setIsSendingCheckout] = useState(false);
 
 	const totalPrice = useMemo(
 		() => cart.reduce((acc, product) => (acc += product.price), 0),
@@ -45,7 +46,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
 
 	async function handlePlaceOrder() {
 		try {
-			// setIsSendingCheckout(true);
+			setIsSendingCheckout(true);
 
 			const response = await axios.post(
 				'/api/checkout',
@@ -58,7 +59,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
 
 			window.location.href = response.data.checkoutUrl;
 		} catch (err) {
-			// setIsSendingCheckout(false);
+			setIsSendingCheckout(false);
 			console.log(err);
 		}
 	}
@@ -115,7 +116,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
 							<span>{moneyFormatter.format(totalPrice)}</span>
 						</PriceLabel>
 						<PlaceOrderButton
-							disabled={cart.length === 0}
+							disabled={cart.length === 0 || isSendingCheckout}
 							onClick={handlePlaceOrder}
 						>
 							Place order

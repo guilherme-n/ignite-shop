@@ -8,13 +8,17 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { Cart } from '../components/Cart';
 import { CartProvider } from '../contexts/CartProvider';
-import { CartButton } from '@/components/CartButton';
+import { CartButton } from '../components/CartButton';
+import { useRouter } from 'next/router';
 
 globalStyles();
 
 export default function App({ Component, pageProps }: AppProps) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isCartOpen, setIsCartOpen] = useState(false);
+	const { route } = useRouter();
+
+	const isSuccessPage = route === '/success';
 
 	function handleOpenDialog() {
 		setIsDialogOpen(true);
@@ -29,11 +33,15 @@ export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<CartProvider>
 			<Container>
-				<Header>
+				<Header
+					css={{
+						justifyContent: `${isSuccessPage ? 'center' : 'space-between'}`,
+					}}
+				>
 					<Link href='/'>
 						<Image src={logo} alt='' />
 					</Link>
-					<CartButton onOpenDialog={handleOpenDialog} />
+					{!isSuccessPage && <CartButton onOpenDialog={handleOpenDialog} />}
 				</Header>
 				<Component {...pageProps} />
 			</Container>
