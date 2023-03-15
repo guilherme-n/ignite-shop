@@ -9,32 +9,21 @@ import {
 	ProductDetails,
 } from '../../styles/pages/product';
 import { Product as ProductType } from '../../types/product';
-import axios from 'axios';
-import { useState } from 'react';
 import Head from 'next/head';
+import { useCart } from '../../contexts/CartProvider';
 
 interface ProductProps {
 	product: ProductType;
 }
 
 export default function Product({ product }: ProductProps) {
-	const [isSendingCheckout, setIsSendingCheckout] = useState(false);
+	const { addToCart, cart } = useCart();
 
-	async function handleBuyProduct() {
-		try {
-			setIsSendingCheckout(true);
-
-			const response = await axios.post('/api/checkout', {
-				id: product.id,
-				priceId: product.defaultPriceId,
-			});
-
-			window.location.href = response.data.checkoutUrl;
-		} catch (err) {
-			setIsSendingCheckout(false);
-			console.log(err);
-		}
+	async function handleAddToCart() {
+		addToCart(product);
 	}
+
+	const isAlreadyInTheCart = !!cart.find((p) => p.id === product.id);
 
 	return (
 		<>
@@ -53,12 +42,12 @@ export default function Product({ product }: ProductProps) {
 
 				<ProductDetails>
 					<h1>{product.name}</h1>
-					<span>{product.price}</span>
+					<span>{moneyFormatter.format(product.price)}</span>
 
 					<p>{product.description}</p>
 
-					<button onClick={handleBuyProduct} disabled={isSendingCheckout}>
-						Buy now
+					<button onClick={handleAddToCart} disabled={isAlreadyInTheCart}>
+						Add to cart
 					</button>
 				</ProductDetails>
 			</ProductContainer>
@@ -90,7 +79,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
 				id: product.id,
 				name: product.name,
 				imageUrl: product.images[0],
-				price: moneyFormatter.format(price.unit_amount! / 100),
+				price: price.unit_amount! / 100,
 				description: product.description,
 				defaultPriceId: price.id,
 			},

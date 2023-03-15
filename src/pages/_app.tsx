@@ -8,6 +8,7 @@ import Link from 'next/link';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { Cart } from '../components/Cart';
+import { CartProvider } from '@/contexts/CartProvider';
 
 globalStyles();
 
@@ -26,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	}
 
 	return (
-		<>
+		<CartProvider>
 			<Container>
 				<Header>
 					<Link href='/'>
@@ -43,6 +44,6 @@ export default function App({ Component, pageProps }: AppProps) {
 			<Dialog.Root open={isDialogOpen}>
 				<Cart isOpen={isCartOpen} onClose={handleCloseCart} />
 			</Dialog.Root>
-		</>
+		</CartProvider>
 	);
 }

@@ -108,6 +108,15 @@ export const PlaceOrderButton = styled('button', {
 	color: '$white',
 	fontSize: '1.125rem',
 	fontWeight: 'bold',
+
+	'&:hover': {
+		backgroundColor: '$green300',
+	},
+
+	'&:disabled': {
+		opacity: 0.6,
+		cursor: 'not-allowed',
+	},
 });
 
 export const AmountLabel = styled('div', {

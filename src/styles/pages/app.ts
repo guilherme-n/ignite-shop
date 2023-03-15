@@ -4,7 +4,6 @@ export const Container = styled('div', {
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'flex-start',
-	// justifyContent: 'center',
 	minHeight: '100vh',
 });
 
@@ -23,4 +22,5 @@ export const CartButton = styled('button', {
 	borderRadius: 6,
 	border: 0,
 	color: '$gray500',
+	lineHeight: 0,
 });

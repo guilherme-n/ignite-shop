@@ -11,8 +11,11 @@ import {
 	PlaceOrderButton,
 } from './styles';
 import { X } from 'phosphor-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { useCart } from '@/contexts/CartProvider';
+import { moneyFormatter } from '@/utils/formatter';
+import { Product as ProductType } from '@/types/product';
 
 interface CartProps {
 	isOpen: boolean;
@@ -20,6 +23,12 @@ interface CartProps {
 }
 export function Cart({ isOpen, onClose }: CartProps) {
 	const [transformSize, setTransformSize] = useState(0);
+	const { cart, removeFromCart } = useCart();
+
+	const totalPrice = useMemo(
+		() => cart.reduce((acc, product) => (acc += product.price), 0),
+		[cart]
+	);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -29,31 +38,35 @@ export function Cart({ isOpen, onClose }: CartProps) {
 		}
 	}, [isOpen]);
 
+	function handleRemoveFromCart(product: ProductType) {
+		removeFromCart(product);
+	}
+
 	return (
 		<Dialog.Portal>
 			<Dialog.Overlay asChild>
 				<DialogOverlay />
 			</Dialog.Overlay>
 			<Dialog.Content asChild>
-				<>
-					<Content
-						css={{
-							transform: `translateX(${transformSize}px)`,
-						}}
-					>
-						<Dialog.Close asChild onClick={onClose}>
-							<CloseButton>
-								<X size={24} />
-							</CloseButton>
-						</Dialog.Close>
+				<Content
+					css={{
+						transform: `translateX(${transformSize}px)`,
+					}}
+				>
+					<Dialog.Close asChild onClick={onClose}>
+						<CloseButton>
+							<X size={24} />
+						</CloseButton>
+					</Dialog.Close>
 
-						<div>
-							<h2>Your Cart</h2>
-							<ProductsList>
-								<Product>
+					<div>
+						<h2>Your Cart</h2>
+						<ProductsList>
+							{cart.map((product) => (
+								<Product key={product.id}>
 									<TShirtContainer>
 										<Image
-											src='https://files.stripe.com/links/MDB8YWNjdF8xTWp1NGFCSTIyZGZ0U25qfGZsX3Rlc3RfVHUwMzEzVXhqV0lONFV6djlqUjFhTk5000zBaXLqZL'
+											src={product.imageUrl}
 											width={102}
 											height={90}
 											alt='T Shirt'
@@ -61,41 +74,30 @@ export function Cart({ isOpen, onClose }: CartProps) {
 									</TShirtContainer>
 
 									<div>
-										<span>TShirt Igniter</span>
-										<span>$15.90</span>
-										<button>Remove</button>
+										<span>{product.name}</span>
+										<span>{moneyFormatter.format(product.price)}</span>
+										<button onClick={() => handleRemoveFromCart(product)}>
+											Remove
+										</button>
 									</div>
 								</Product>
-								<Product>
-									<TShirtContainer>
-										<Image
-											src='https://files.stripe.com/links/MDB8YWNjdF8xTWp1NGFCSTIyZGZ0U25qfGZsX3Rlc3RfVHUwMzEzVXhqV0lONFV6djlqUjFhTk5000zBaXLqZL'
-											width={102}
-											height={90}
-											alt='T Shirt'
-										/>
-									</TShirtContainer>
-									<div>
-										<span>TShirt Igniter</span>
-										<span>$15.90</span>
-										<button>Remove</button>
-									</div>
-								</Product>
-							</ProductsList>
-						</div>
-						<div>
-							<AmountLabel>
-								<span>Amount</span>
-								<span>2 items</span>
-							</AmountLabel>
-							<PriceLabel>
-								<span>Total price</span>
-								<span>$31.80</span>
-							</PriceLabel>
-							<PlaceOrderButton>Place order</PlaceOrderButton>
-						</div>
-					</Content>
-				</>
+							))}
+						</ProductsList>
+					</div>
+					<div>
+						<AmountLabel>
+							<span>Amount</span>
+							<span>{cart.length} item(s)</span>
+						</AmountLabel>
+						<PriceLabel>
+							<span>Total price</span>
+							<span>{moneyFormatter.format(totalPrice)}</span>
+						</PriceLabel>
+						<PlaceOrderButton disabled={cart.length === 0}>
+							Place order
+						</PlaceOrderButton>
+					</div>
+				</Content>
 			</Dialog.Content>
 		</Dialog.Portal>
 	);
