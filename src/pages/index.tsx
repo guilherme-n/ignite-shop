@@ -1,18 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useKeenSlider } from 'keen-slider/react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { GetStaticProps } from 'next';
+
+import { useKeenSlider } from 'keen-slider/react';
+import 'keen-slider/keen-slider.min.css';
 
 import Stripe from 'stripe';
 import { stripe } from '../lib/stripe';
 
-import 'keen-slider/keen-slider.min.css';
-
 import { moneyFormatter } from '../utils/formatter';
 import { HomeContainer, Product } from '../styles/pages/home';
-import Head from 'next/head';
 import { ProductSkeleton } from '../components/ProductSkeleton';
-import { useRouter } from 'next/router';
 
 interface HomeProps {
 	products: {

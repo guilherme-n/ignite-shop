@@ -23,8 +23,4 @@ export const CartButton = styled('button', {
 	borderRadius: 6,
 	border: 0,
 	color: '$gray500',
-
-	'&:hover': {
-		cursor: 'pointer',
-	},
 });

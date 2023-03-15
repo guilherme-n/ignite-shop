@@ -16,7 +16,6 @@ export const Product = styled('div', {
 	background: 'linear-gradient(180deg, #12a483 0%, #7465d4 100%)',
 	borderRadius: 8,
 	padding: '0.25rem',
-	cursor: 'pointer',
 	position: 'relative',
 	overflow: 'hidden',
 
