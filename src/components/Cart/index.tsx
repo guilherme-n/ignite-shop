@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { useCart } from '@/contexts/CartProvider';
 import { moneyFormatter } from '@/utils/formatter';
 import { Product as ProductType } from '@/types/product';
+import axios from 'axios';
 
 interface CartProps {
 	isOpen: boolean;
@@ -40,6 +41,26 @@ export function Cart({ isOpen, onClose }: CartProps) {
 
 	function handleRemoveFromCart(product: ProductType) {
 		removeFromCart(product);
+	}
+
+	async function handlePlaceOrder() {
+		try {
+			// setIsSendingCheckout(true);
+
+			const response = await axios.post(
+				'/api/checkout',
+				cart.map((product) => {
+					return {
+						priceId: product.defaultPriceId,
+					};
+				})
+			);
+
+			window.location.href = response.data.checkoutUrl;
+		} catch (err) {
+			// setIsSendingCheckout(false);
+			console.log(err);
+		}
 	}
 
 	return (
@@ -93,7 +114,10 @@ export function Cart({ isOpen, onClose }: CartProps) {
 							<span>Total price</span>
 							<span>{moneyFormatter.format(totalPrice)}</span>
 						</PriceLabel>
-						<PlaceOrderButton disabled={cart.length === 0}>
+						<PlaceOrderButton
+							disabled={cart.length === 0}
+							onClick={handlePlaceOrder}
+						>
 							Place order
 						</PlaceOrderButton>
 					</div>
