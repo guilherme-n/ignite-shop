@@ -14,13 +14,5 @@ export const Header = styled('header', {
 	margin: '0 auto',
 	display: 'flex',
 	justifyContent: 'space-between',
-});
-
-export const CartButton = styled('button', {
-	padding: '0.75rem',
-	background: '$gray800',
-	borderRadius: 6,
-	border: 0,
-	color: '$gray500',
-	lineHeight: 0,
+	alignItems: 'center',
 });
