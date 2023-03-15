@@ -4,7 +4,8 @@ export const Container = styled('div', {
 	display: 'flex',
 	flexDirection: 'column',
 	alignItems: 'flex-start',
-	justifyContent: 'center',
+	// justifyContent: 'center',
+	minHeight: '100vh',
 });
 
 export const Header = styled('header', {
@@ -16,7 +17,7 @@ export const Header = styled('header', {
 	justifyContent: 'space-between',
 });
 
-export const CartIcon = styled('button', {
+export const CartButton = styled('button', {
 	padding: '0.75rem',
 	background: '$gray800',
 	borderRadius: 6,
