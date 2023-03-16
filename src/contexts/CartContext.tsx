@@ -1,21 +1,47 @@
 import { Product } from '@/types/product';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+	createContext,
+	ReactNode,
+	useContext,
+	useEffect,
+	useState,
+} from 'react';
 
-const CartContext = createContext({} as CartContextType);
+export const CART_LOCAL_STORAGE_KEY = '@ignite-shop:cart-state-1.0';
 
 interface CartContextType {
 	cart: Product[];
-	addToCart: (product: Product) => void;
+	addToCart: (product: Product | Product[]) => void;
 	removeFromCart: (product: Product) => void;
+	clearCart: () => void;
 }
+
+const CartContext = createContext({} as CartContextType);
 
 export function CartProvider({ children }: { children: ReactNode }) {
 	const [cart, setCart] = useState<Product[]>([]);
 
-	function addToCart(product: Product) {
-		if (cart.find((p) => p.id === product.id)) return;
+	useEffect(() => {
+		localStorage.setItem(CART_LOCAL_STORAGE_KEY, JSON.stringify(cart));
+	}, [cart]);
 
-		setCart((state) => [...state, product]);
+	function addToCart(products: Product | Product[]) {
+		let productsArray: Product[] = [];
+
+		if (Array.isArray(products)) {
+			productsArray = [...products];
+		} else {
+			productsArray.push(products);
+		}
+
+		const newArray: Product[] = [];
+
+		productsArray.forEach((product) => {
+			if (cart.find((p) => p.id === product.id)) return;
+			newArray.push(product);
+		});
+
+		setCart((state) => [...state, ...newArray]);
 	}
 
 	function removeFromCart(product: Product) {
@@ -25,8 +51,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
 		});
 	}
 
+	function clearCart() {
+		setCart([]);
+	}
+
 	return (
-		<CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+		<CartContext.Provider
+			value={{ cart, addToCart, removeFromCart, clearCart }}
+		>
 			{children}
 		</CartContext.Provider>
 	);

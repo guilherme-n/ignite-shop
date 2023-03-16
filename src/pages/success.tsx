@@ -9,6 +9,8 @@ import {
 } from '../styles/pages/success';
 import Stripe from 'stripe';
 import Head from 'next/head';
+import { useEffect } from 'react';
+import { useCart } from '@/contexts/CartContext';
 
 interface SuccessProps {
 	customerName: string;
@@ -20,6 +22,12 @@ interface SuccessProps {
 }
 
 export default function Success({ customerName, products }: SuccessProps) {
+	const { clearCart } = useCart();
+
+	useEffect(() => {
+		clearCart();
+	}, []);
+
 	return (
 		<>
 			<Head>

@@ -7,6 +7,7 @@ export const CartButtonContainer = styled('button', {
 	border: 0,
 	color: '$gray500',
 	lineHeight: 0,
+	position: 'relative',
 });
 
 export const CartItemsCounter = styled('span', {
@@ -15,8 +16,8 @@ export const CartItemsCounter = styled('span', {
 	alignItems: 'center',
 
 	position: 'absolute',
-	top: 30,
-	right: 35,
+	top: -10,
+	right: -6,
 
 	backgroundColor: '$green500',
 	color: '$white',
