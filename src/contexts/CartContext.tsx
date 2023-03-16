@@ -1,9 +1,9 @@
 import { Product } from '@/types/product';
 import { createContext, ReactNode, useContext, useState } from 'react';
 
-const CartContext = createContext({} as CartValues);
+const CartContext = createContext({} as CartContextType);
 
-interface CartValues {
+interface CartContextType {
 	cart: Product[];
 	addToCart: (product: Product) => void;
 	removeFromCart: (product: Product) => void;

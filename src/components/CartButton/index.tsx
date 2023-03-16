@@ -1,4 +1,4 @@
-import { useCart } from '../../contexts/CartProvider';
+import { useCart } from '../../contexts/CartContext';
 import { Handbag } from 'phosphor-react';
 import { CartButtonContainer, CartItemsCounter } from './styles';
 

@@ -13,7 +13,7 @@ import {
 import { X } from 'phosphor-react';
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useCart } from '@/contexts/CartProvider';
+import { useCart } from '@/contexts/CartContext';
 import { moneyFormatter } from '@/utils/formatter';
 import { Product as ProductType } from '@/types/product';
 import axios from 'axios';

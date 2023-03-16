@@ -7,7 +7,7 @@ import Link from 'next/link';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState } from 'react';
 import { Cart } from '../components/Cart';
-import { CartProvider } from '../contexts/CartProvider';
+import { CartProvider } from '../contexts/CartContext';
 import { CartButton } from '../components/CartButton';
 import { useRouter } from 'next/router';
 

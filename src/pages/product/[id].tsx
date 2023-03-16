@@ -10,7 +10,7 @@ import {
 } from '../../styles/pages/product';
 import { Product as ProductType } from '../../types/product';
 import Head from 'next/head';
-import { useCart } from '../../contexts/CartProvider';
+import { useCart } from '../../contexts/CartContext';
 
 interface ProductProps {
 	product: ProductType;
