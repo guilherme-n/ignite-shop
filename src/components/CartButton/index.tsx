@@ -15,9 +15,7 @@ export function CartButton({ onOpenDialog }: CartButtonProps) {
 		const data = localStorage.getItem(CART_LOCAL_STORAGE_KEY);
 
 		if (data) {
-			console.log('dataParsed', JSON.parse(data));
 			const cart = JSON.parse(data) as Product[];
-
 			addToCart(cart);
 		}
 	}, []);
